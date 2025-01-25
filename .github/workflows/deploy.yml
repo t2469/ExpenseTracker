@@ -1,7 +1,7 @@
 name: Deploy GAS
 on:
   push:
-    branches: [main]
+    branches: [ main ]
 
 jobs:
   deploy:
@@ -19,3 +19,4 @@ jobs:
           command: 'deploy'
           deploymentId: ${{ secrets.DEPLOYMENT_ID }}
           description: 'Auto-deploy via GitHub Actions'
+          sourceRootDir: 'src'
