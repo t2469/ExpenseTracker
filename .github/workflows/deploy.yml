@@ -19,9 +19,10 @@ jobs:
       - name: Install clasp
         run: npm install -g @google/clasp
 
-      - name: Deploy to GAS
-        run: |
-          clasp push --force
+      - name: Setup .clasprc.json
+        run: echo "$CLASPRC_JSON" > ~/.clasprc.json
         env:
-          CLASP_TOKEN: ${{ secrets.CLASP_TOKEN }}
-          CLASP_CLIENT_SECRET: ${{ secrets.CLASP_CLIENT_SECRET }}
+          CLASPRC_JSON: ${{ secrets.CLASPRC_JSON }}
+
+      - name: Deploy to GAS
+        run: clasp push --force
