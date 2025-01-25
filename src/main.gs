@@ -4,7 +4,7 @@ function onOpen() {
 
     // カスタムメニューを作成
     ui.createMenu('支出管理')
-        .addItem('入力', 'showInputDialog') // メニューアイテム追加（クリックでshowInputDialog実行）
+        .addItem('入力', 'showInputDialog')
         .addToUi();
 }
 
