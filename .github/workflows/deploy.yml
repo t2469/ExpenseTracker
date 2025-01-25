@@ -13,7 +13,6 @@ jobs:
       - name: Deploy via Google Apps Script Action
         uses: Mayu-mic/google-apps-script-action@v2
         with:
-          # Secretsから認証情報を取得
           clasprc: ${{ secrets.CLASPRC_JSON }}
           scriptId: ${{ secrets.SCRIPT_ID }}
           command: 'deploy'
