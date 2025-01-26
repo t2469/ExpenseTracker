@@ -33,6 +33,7 @@
             display: grid;
             grid-template-columns: 1fr;
             gap: 1.5rem;
+            align-items: stretch;
         }
 
         .card {
@@ -116,7 +117,7 @@
         }
 
         .category-management {
-            margin-top: 1.5rem;
+            margin-top: auto;
         }
 
         .category-list {
@@ -146,7 +147,7 @@
         }
 
         .chart-container {
-            height: 400px;
+            height: 380px;
             border-radius: var(--radius);
             overflow: hidden;
             background: white;
@@ -169,6 +170,13 @@
             background: rgba(255, 118, 117, 0.1);
             color: #D63031;
             border: 1px solid rgba(255, 118, 117, 0.2);
+        }
+
+        .right-column {
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+            gap: 1.5rem;
         }
 
         @media (min-width: 768px) {
@@ -204,7 +212,7 @@
             </div>
         </div>
 
-        <div>
+        <div class="right-column">
             <div class="card">
                 <h2>新規追加</h2>
                 <div class="input-group">
@@ -260,7 +268,10 @@
             colors: ['#6C5CE7', '#FF7675', '#00B894', '#F2C94C'],
             chartArea: {width: '85%', height: '75%'},
             legend: {position: 'labeled'},
-            animation: {duration: 500, startup: true}
+            animation: {duration: 500, startup: true},
+            ...(type === 'category' && {
+                pieSliceText: 'none'
+            })
         };
 
         const ChartType = type === 'category' ?
