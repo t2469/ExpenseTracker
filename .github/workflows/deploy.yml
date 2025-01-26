@@ -1,4 +1,5 @@
 name: Deploy GAS
+
 on:
   push:
     branches: [ main ]
@@ -10,13 +11,26 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Deploy via Google Apps Script Action
-        uses: Mayu-mic/google-apps-script-action@v2
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
         with:
-          clasprc: ${{ secrets.CLASPRC_JSON }}
-          scriptId: ${{ secrets.SCRIPT_ID }}
-          command: 'deploy'
-          deploymentId: ${{ secrets.DEPLOYMENT_ID }}
-          description: 'Auto-deploy via GitHub Actions'
-          sourceRootDir: 'src'
-          claspOptions: '--type webapp --deploymentId ${{ secrets.DEPLOYMENT_ID }}'
+          node-version: '22'
+
+      - name: Install clasp
+        run: npm install -g @google/clasp@latest
+
+      - name: Authenticate clasp
+        env:
+          CLASPRC_JSON: ${{ secrets.CLASPRC_JSON }}
+        run: |
+          echo "${CLASPRC_JSON}" > ~/.clasprc.json
+
+      - name: Deploy via clasp
+        id: deploy
+        run: |
+          DEPLOY_OUTPUT=$(clasp deploy --description "Auto-deploy via GitHub Actions" --deploymentId ${{ secrets.DEPLOYMENT_ID }})
+          echo "$DEPLOY_OUTPUT"
+
+      - name: Output Web App URL
+        run: |
+          echo "Web App URL: https://script.google.com/macros/s/${{ secrets.DEPLOYMENT_ID }}/exec"
