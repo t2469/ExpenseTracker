@@ -28,10 +28,6 @@ jobs:
 
       - name: Install clasp
         run: npm install -g @google/clasp@latest
-
-      - name: Generate ~/.clasprc.json
-        run: |
-          bash deployment/setup.sh
       - name: Generate ~/.clasp.json
         run: |
           bash deployment/setup_claspjson.sh
