@@ -26,7 +26,10 @@ jobs:
           echo "$CLASPRC_JSON" > ~/.clasprc.json
           echo '{"scriptId":"'"$SCRIPT_ID"'"}' > .clasp.json
 
-      - name: Execute Deployment
+      - name: Push
+        run: clasp push --force
+
+      - name: Deploy
         env:
           DEPLOYMENT_ID: ${{ secrets.DEPLOYMENT_ID }}
         run: |
