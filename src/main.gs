@@ -1,4 +1,3 @@
-// シート名定数
 const SHEETS = {
     EXPENSE: '支出記録',
     CATEGORY: 'カテゴリ'
@@ -133,7 +132,6 @@ function buildTimePeriodData(data, period) {
     ];
 }
 
-// ISO週番号計算関数
 function getISOWeek(date) {
     const d = new Date(date);
     d.setHours(0, 0, 0, 0);
