@@ -2,33 +2,302 @@
 <html>
 <head>
     <base target="_top">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
     <style>
-        body { font-family: Arial, sans-serif; padding: 20px; }
-        input { margin: 5px 0; width: 100%; padding: 8px; }
-        button { padding: 10px 20px; margin-top: 10px; }
+        :root {
+            --primary: #4A90E2;
+            --secondary: #6FCF97;
+            --background: #F8F9FC;
+            --text: #2C3E50;
+            --border: #E0E7FF;
+            --radius: 12px;
+            --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--background);
+            padding: 2rem;
+            margin: 0;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .dashboard {
+            display: grid;
+            grid-template-columns: 1fr 300px;
+            gap: 2rem;
+        }
+
+        .card {
+            background: white;
+            border-radius: var(--radius);
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border);
+        }
+
+        h2 {
+            color: var(--text);
+            margin: 0 0 1.5rem;
+            font-size: 1.5rem;
+            font-weight: 600;
+            padding-bottom: 0.75rem;
+            border-bottom: 2px solid var(--primary);
+        }
+
+        .input-group input,
+        .input-group select {
+            padding: 0.5rem 0.75rem;
+            font-size: 0.9rem;
+            height: 38px;
+            line-height: 1.2;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+        }
+
+        select, input {
+            width: 100%;
+            padding: 0.875rem;
+            border: 2px solid var(--border);
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        select:focus, input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.1);
+        }
+
+        .button {
+            background: linear-gradient(135deg, var(--primary) 0%, #357ABD 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 0.875rem 1.5rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: 100%;
+        }
+
+        .button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(74, 144, 226, 0.3);
+        }
+
+        .category-management {
+            margin-top: 2rem;
+        }
+
+        .category-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+            gap: 0.5rem;
+            margin-top: 1rem;
+        }
+
+        .category-item {
+            background: rgba(74, 144, 226, 0.1);
+            color: var(--primary);
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .delete-btn {
+            background: none;
+            border: none;
+            color: #EB5757;
+            cursor: pointer;
+            margin-left: 0.5rem;
+        }
+
+        .chart-container {
+            height: 500px;
+            border-radius: var(--radius);
+            overflow: hidden;
+        }
+
+        .message {
+            padding: 1rem;
+            border-radius: 8px;
+            margin: 1rem 0;
+        }
+
+        .success {
+            background: rgba(111, 207, 151, 0.1);
+            color: #2A6B4E;
+        }
+
+        .error {
+            background: rgba(235, 87, 87, 0.1);
+            color: #B03A3A;
+        }
     </style>
+    <script src="https://www.gstatic.com/charts/loader.js"></script>
 </head>
 <body>
-<h3>支出入力</h3>
-<label for="category">カテゴリ:</label>
-<input type="text" id="category" placeholder="例: 食費">
-<label for="amount">金額:</label>
-<input type="number" id="amount" placeholder="例: 1000">
-<button onclick="submitExpense()">保存</button>
+<div class="container">
+    <div class="dashboard">
+        <div>
+            <div class="card">
+                <h2>支出分析</h2>
+                <div class="input-group">
+                    <select id="chartType" onchange="drawChart()">
+                        <option value="category">カテゴリ別</option>
+                        <option value="week">週ごと</option>
+                        <option value="month">月ごと</option>
+                        <option value="year">年ごと</option>
+                    </select>
+                </div>
+                <div id="chart" class="chart-container"></div>
+            </div>
+        </div>
+
+        <div>
+            <div class="card">
+                <h2>新規追加</h2>
+                <div class="input-group">
+                    <label>カテゴリ</label>
+                    <select id="category"></select>
+                </div>
+                <div class="input-group">
+                    <label>金額</label>
+                    <input type="number" id="amount" placeholder="例: 1000">
+                </div>
+                <button class="button" onclick="submitExpense()">支出を追加</button>
+            </div>
+
+            <div class="card category-management">
+                <h2>カテゴリ管理</h2>
+                <div class="input-group">
+                    <input type="text" id="newCategory" placeholder="新しいカテゴリ">
+                </div>
+                <button class="button secondary" onclick="addCategory()">カテゴリ追加</button>
+                <div class="category-list" id="categoryList"></div>
+            </div>
+        </div>
+    </div>
+</div>
 
 <script>
+    google.charts.load('current', {packages: ['corechart']});
+    google.charts.setOnLoadCallback(init);
+
+    function init() {
+        drawChart();
+        loadCategories();
+    }
+
+    function drawChart() {
+        const type = document.getElementById('chartType').value;
+        google.script.run
+            .withSuccessHandler(data => renderChart(data, type))
+            .withFailureHandler(showError)
+            .getChartData(type);
+    }
+
+    function renderChart(data, type) {
+        const container = document.getElementById('chart');
+        if (!data || data.length < 2) {
+            container.innerHTML = '<div class="message">データがありません</div>';
+            return;
+        }
+
+        const chartData = google.visualization.arrayToDataTable(data);
+        const options = {
+            backgroundColor: 'transparent',
+            colors: ['#4A90E2', '#6FCF97', '#F2C94C', '#EB5757'],
+            chartArea: {width: '85%', height: '75%'},
+            legend: {position: 'labeled'},
+            animation: {duration: 500, startup: true}
+        };
+
+        const ChartType = type === 'category' ?
+            google.visualization.PieChart :
+            google.visualization.ColumnChart;
+
+        new ChartType(container).draw(chartData, options);
+    }
+
+    function loadCategories() {
+        google.script.run
+            .withSuccessHandler(updateCategoryUI)
+            .getCategories();
+    }
+
+    function updateCategoryUI(categories) {
+        const select = document.getElementById('category');
+        select.innerHTML = categories.map(c => `<option>${c}</option>`).join('');
+
+        const list = document.getElementById('categoryList');
+        list.innerHTML = categories.map(c => `
+                <div class="category-item">
+                    ${c}
+                    <button class="delete-btn" onclick="deleteCategory('${c}')">×</button>
+                </div>
+            `).join('');
+    }
+
     function submitExpense() {
         const category = document.getElementById('category').value;
         const amount = document.getElementById('amount').value;
-        if (category && amount) {
-            google.script.run.withSuccessHandler(function(){
-                alert('支出が保存されました');
-                document.getElementById('category').value = '';
+
+        google.script.run
+            .withSuccessHandler(() => {
                 document.getElementById('amount').value = '';
-            }).saveExpense(category, Number(amount));
-        } else {
-            alert('カテゴリと金額を入力してください');
+                drawChart();
+                showMessage('支出を追加しました', 'success');
+            })
+            .withFailureHandler(showError)
+            .saveExpense(category, amount);
+    }
+
+    function addCategory() {
+        const newCat = document.getElementById('newCategory').value.trim();
+        google.script.run
+            .withSuccessHandler(() => {
+                document.getElementById('newCategory').value = '';
+                loadCategories();
+                showMessage('カテゴリを追加しました', 'success');
+            })
+            .withFailureHandler(showError)
+            .saveCategory(newCat);
+    }
+
+    function deleteCategory(category) {
+        if (confirm(`"${category}"を削除しますか？`)) {
+            google.script.run
+                .withSuccessHandler(loadCategories)
+                .withFailureHandler(showError)
+                .deleteCategory(category);
         }
+    }
+
+    function showMessage(text, type) {
+        const msg = document.createElement('div');
+        msg.className = `message ${type}`;
+        msg.textContent = text;
+        document.body.appendChild(msg);
+        setTimeout(() => msg.remove(), 3000);
+    }
+
+    function showError(error) {
+        showMessage(error.message || error, 'error');
     }
 </script>
 </body>
