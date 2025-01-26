@@ -19,4 +19,4 @@ jobs:
           deploymentId: ${{ secrets.DEPLOYMENT_ID }}
           description: 'Auto-deploy via GitHub Actions'
           sourceRootDir: 'src'
-          claspOptions: '--deploymentId ${{ secrets.DEPLOYMENT_ID }}'
+          claspOptions: '--type webapp --deploymentId ${{ secrets.DEPLOYMENT_ID }}'
