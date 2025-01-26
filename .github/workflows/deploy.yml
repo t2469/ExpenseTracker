@@ -24,7 +24,7 @@ jobs:
           SCRIPT_ID: ${{ secrets.SCRIPT_ID }}
         run: |
           echo "$CLASPRC_JSON" > ~/.clasprc.json
-          echo '{"scriptId":"'"$SCRIPT_ID"'"}' > .clasp.json
+          echo '{"scriptId":"'"$SCRIPT_ID"'","rootDir":"src"}' > .clasp.json
 
       - name: Push
         run: clasp push --force
